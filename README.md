@@ -3,11 +3,11 @@
 ## Clone
 
 ```bash
-git clone https://github.com/StoneHappy/Stone_Project_Template.git --recursive
+git clone https://github.com/StoneHappy/assimp_begin.git --recursive
 
 or 
 
-git clone https://github.com/StoneHappy/Stone_Project_Template.git
+git clone https://github.com/StoneHappy/assimp_begin.git
 
 git submodule init --update
 ```
@@ -27,5 +27,5 @@ cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=path to/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=your target triplet
 
 cmake --build ./ --config RelWithDebInfo --target StoneShadercompile -j 10
-cmake --build ./ --config RelWithDebInfo --target APPName -j 10
+cmake --build ./ --config RelWithDebInfo --target AssimpBegin -j 10
 ```
