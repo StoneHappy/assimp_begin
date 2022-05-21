@@ -1,3 +1,6 @@
 [submodule "src/Vendors/Stone"]
 	path = src/Vendors/Stone
 	url = https://github.com/StoneHappy/Stone.git
+[submodule "src/Vendors/Assimp"]
+	path = src/Vendors/Assimp
+	url = https://github.com/assimp/assimp.git
