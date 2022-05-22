@@ -1,30 +1,34 @@
 #pragma once
-#include <Resource/Data/Interface/Mesh.h>
+
+#include <Resource/Data/Implement/VCG/VCGMesh.h>
 
 #include <vector>
 #include <assimp/scene.h>
 
 #include <glm/glm.hpp>
+#include <memory>
 namespace Stone
 {
-	class AssimpNode
-	{
-	public:
-		AssimpNode(const char* filename);
-
-	private:
-		aiNode* m_RootNode;
-
-		std::vector<AssimpMesh*> 
-	};
-
 	class AssimpMesh : public Mesh
 	{
 	public:
-		AssimpMesh(aiMesh* mesh);
+		AssimpMesh(const char* filename);
+
+		AssimpMesh(const aiScene* sc, const aiNode* node);
+
+		std::vector<std::shared_ptr<AssimpMesh>> m_Children;
+
 	private:
-		aiMesh* m_Mesh;
+		void loadMesh(const aiScene* scene, const aiNode* node);
+
+		virtual void updateBuffer() override;
+        
+
 		glm::mat4 m_Transofrm;
-		std::vector<AssimpMesh*> m_Children;
+
+		const aiScene* m_Scene;
+		const aiNode* m_Node;
+
+        bool m_NeedUpdateBuffer = true;
 	};
 }

@@ -17,8 +17,12 @@
 #include <ImGuizmo.h>
 #include <Function/Scene/Light.h>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <AssimpMesh/AssimpMesh.h>
 namespace Stone
 {
+    AssimpMesh* mesh;
+    TransformComponent* transform;
 	EditorRendererWidget::EditorRendererWidget(QWidget* parent)
 		: QOpenGLWidget(parent), m_MousePos(std::make_shared<MousePos>(0.0f, 0.0f)), m_MouseAngle(std::make_shared<MouseAngle>(0.0f, 0.0f))
 	{}
@@ -31,6 +35,9 @@ namespace Stone
         PublicSingleton<Engine>::getInstance().renderInitialize();
         PublicSingleton<Engine>::getInstance().logicalInitialize();
         QtImGui::initialize(this);
+
+        mesh = new AssimpMesh("D:/datas/obj/cccc.obj");
+        transform = new TransformComponent();
 	}
 
 	void EditorRendererWidget::resizeGL(int w, int h)
@@ -44,7 +51,18 @@ namespace Stone
         QElapsedTimer timer;
         timer.start();
         PublicSingleton<Engine>::getInstance().logicalTick();
-        PublicSingleton<Engine>::getInstance().renderTick(defaultFramebufferObject());
+        PublicSingleton<Renderer>::getInstance().begin();
+        PublicSingleton<Scene>::getInstance().renderTick();
+        transform->bind();
+        PublicSingleton<Renderer>::getInstance().render(mesh);
+        for (auto cm : mesh->m_Children)
+        {
+            PublicSingleton<Renderer>::getInstance().render(cm.get());
+        }
+        //_texture->bind(0);
+        //PublicSingleton<Renderer>::getInstance().render(vcgmesh);
+
+        PublicSingleton<Renderer>::getInstance().end(defaultFramebufferObject());
         renderImGui();
         update();
         PublicSingleton<Engine>::getInstance().DeltaTime = timer.nsecsElapsed()* 1.0e-9f;
