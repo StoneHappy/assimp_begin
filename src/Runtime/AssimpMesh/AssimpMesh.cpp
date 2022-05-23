@@ -8,59 +8,42 @@
 
 namespace Stone
 {
-
-	AssimpMesh::AssimpMesh(const char* filename)
-		: m_Scene(aiImportFile(filename, aiProcessPreset_TargetRealtime_MaxQuality))
+	AssimpMesh::AssimpMesh(const aiMesh* mesh)
 	{
-		loadMesh(m_Scene, m_Scene->mRootNode);
+		loadMesh(mesh);
 	}
-	AssimpMesh::AssimpMesh(const aiScene* sc, const aiNode* node)
-		: m_Scene(sc), m_Node(node)
+	void AssimpMesh::loadMesh(const aiMesh* mesh)
 	{
-		loadMesh(m_Scene, node);
-	}
-	void AssimpMesh::loadMesh(const aiScene* scene,const aiNode* node)
-	{
-		LOG_DEBUG("node->mNumMeshes: {0}", node->mNumMeshes);
-		for (size_t n=0; n < node->mNumMeshes; ++n) {
-			const C_STRUCT aiMesh* mesh = scene->mMeshes[node->mMeshes[n]];
-			LOG_DEBUG("mesh->mVertices: {0}", mesh->mNumVertices);
-			//apply_material(sc->mMaterials[mesh->mMaterialIndex]);
+		LOG_DEBUG("mesh->mVertices: {0}", mesh->mNumVertices);
+		//apply_material(sc->mMaterials[mesh->mMaterialIndex]);
+		for (size_t i = 0; i < mesh->mNumVertices; i++)
+		{
+			Vertex v;
+			v.px = mesh->mVertices[i].x;
+			v.py = mesh->mVertices[i].y;
+			v.pz = mesh->mVertices[i].z;
+			v.u = 0;
+			v.v = 0;
+			v.nx = mesh->mNormals[i].x;
+			v.ny = mesh->mNormals[i].y;
+			v.nz = mesh->mNormals[i].z;
+			m_V.push_back(v);
+		}
 
-			for (size_t i = 0; i < mesh->mNumVertices; i++)
+		for (size_t i = 0; i < mesh->mNumFaces; i++)
+		{
+			const aiFace* face = &mesh->mFaces[i];
+
+			if (face->mNumIndices != 3)
 			{
-				Vertex v;
-				v.px = mesh->mVertices[i].x;
-				v.py = mesh->mVertices[i].y;
-				v.pz = mesh->mVertices[i].z;
-				v.u = 0;
-				v.v = 0;
-				v.nx = mesh->mNormals[i].x;
-				v.ny = mesh->mNormals[i].y;
-				v.nz = mesh->mNormals[i].z;
-				m_V.push_back(v);
-			}
-
-			for (size_t i = 0; i < mesh->mNumFaces; i++)
-			{
-				const aiFace* face = &mesh->mFaces[i];
-
-				if (face->mNumIndices != 3)
-				{
-					LOG_ERROR("Stone only support TriMesh")
+				LOG_ERROR("Stone only support TriMesh")
 					return;
-				}
-				m_I.push_back(face->mIndices[0]);
-				m_I.push_back(face->mIndices[1]);
-				m_I.push_back(face->mIndices[2]);
 			}
+			m_I.push_back(face->mIndices[0]);
+			m_I.push_back(face->mIndices[1]);
+			m_I.push_back(face->mIndices[2]);
 		}
 		updateBuffer();
-		/* draw all children */
-		LOG_DEBUG("numb child: {0}", node->mNumChildren);
-		for (size_t n = 0; n < node->mNumChildren; ++n) {
-			m_Children.push_back(std::make_shared<AssimpMesh>(scene, node->mChildren[n]));
-		}
 	}
 	void AssimpMesh::updateBuffer()
 	{

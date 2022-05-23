@@ -26,6 +26,8 @@ if(NOT TARGET assimp)
         "Inject debug postfix in .a/.so/.dll lib names"
         OFF
     )
+    option(USE_STATIC_CRT "Link against the static runtime libraries." ON)
+
     add_subdirectory(Assimp)
 
     set_target_properties(assimp PROPERTIES FOLDER Vendors/Assimp)

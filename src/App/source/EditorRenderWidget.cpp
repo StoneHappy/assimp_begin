@@ -19,9 +19,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <AssimpMesh/AssimpMesh.h>
+#include <AssimpMesh/AssimpNode.h>
 namespace Stone
 {
-    AssimpMesh* mesh;
+    AssimpNode* meshnode;
     TransformComponent* transform;
 	EditorRendererWidget::EditorRendererWidget(QWidget* parent)
 		: QOpenGLWidget(parent), m_MousePos(std::make_shared<MousePos>(0.0f, 0.0f)), m_MouseAngle(std::make_shared<MouseAngle>(0.0f, 0.0f))
@@ -36,7 +37,7 @@ namespace Stone
         PublicSingleton<Engine>::getInstance().logicalInitialize();
         QtImGui::initialize(this);
 
-        mesh = new AssimpMesh("D:/datas/obj/cccc.obj");
+        meshnode = new AssimpNode("D:/datas/obj/cccc.obj");
         transform = new TransformComponent();
 	}
 
@@ -54,11 +55,7 @@ namespace Stone
         PublicSingleton<Renderer>::getInstance().begin();
         PublicSingleton<Scene>::getInstance().renderTick();
         transform->bind();
-        PublicSingleton<Renderer>::getInstance().render(mesh);
-        for (auto cm : mesh->m_Children)
-        {
-            PublicSingleton<Renderer>::getInstance().render(cm.get());
-        }
+        AssimpNode::recusiveRender(meshnode);
         //_texture->bind(0);
         //PublicSingleton<Renderer>::getInstance().render(vcgmesh);
 

@@ -12,23 +12,16 @@ namespace Stone
 	class AssimpMesh : public Mesh
 	{
 	public:
-		AssimpMesh(const char* filename);
 
-		AssimpMesh(const aiScene* sc, const aiNode* node);
+		AssimpMesh(const aiMesh* mesh);
 
 		std::vector<std::shared_ptr<AssimpMesh>> m_Children;
 
 	private:
-		void loadMesh(const aiScene* scene, const aiNode* node);
+		void loadMesh(const aiMesh* mesh);
 
 		virtual void updateBuffer() override;
         
-
-		glm::mat4 m_Transofrm;
-
-		const aiScene* m_Scene;
-		const aiNode* m_Node;
-
         bool m_NeedUpdateBuffer = true;
 	};
 }
