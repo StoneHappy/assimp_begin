@@ -7,13 +7,15 @@
 namespace Stone
 {
 	AssimpNode::AssimpNode(const char* filename)
+		: m_Filename(filename)
 	{
 		m_Parent = nullptr;
 		const aiScene* scene = aiImportFile(filename, aiProcessPreset_TargetRealtime_MaxQuality);
+		m_Scene = scene;
 		loadNode(scene, scene->mRootNode);
 	}
-	AssimpNode::AssimpNode(AssimpNode* parentNode,const aiNode* node, const	aiScene* scene)
-		: m_Scene(scene), m_Parent(parentNode)
+	AssimpNode::AssimpNode(AssimpNode* parentNode,const aiNode* node, const	aiScene* scene, const std::string& filename)
+		: m_Scene(scene), m_Parent(parentNode), m_Filename(filename), m_Node(node)
 	{
 		loadNode(scene, node);
 	}
@@ -35,12 +37,12 @@ namespace Stone
 		for (size_t i = 0; i < node->mNumMeshes; i++)
 		{
 			const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			m_ChildMeshes.push_back(std::make_shared<AssimpMesh>(mesh));
+			m_ChildMeshes.push_back(std::make_shared<AssimpMesh>(mesh, scene, node, m_Filename));
 		}
 
 		for (size_t i = 0; i < node->mNumChildren; i++)
 		{
-			m_ChildNodes.push_back(std::make_shared<AssimpNode>(this, node->mChildren[i], scene));
+			m_ChildNodes.push_back(std::make_shared<AssimpNode>(this, node->mChildren[i], scene, m_Filename));
 		}
 	}
 }

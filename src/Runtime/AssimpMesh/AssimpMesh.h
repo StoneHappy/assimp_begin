@@ -13,7 +13,7 @@ namespace Stone
 	{
 	public:
 
-		AssimpMesh(const aiMesh* mesh);
+		AssimpMesh(const aiMesh* mesh, const aiScene* scene, const aiNode* node, const std::string& filename);
 
 		std::vector<std::shared_ptr<AssimpMesh>> m_Children;
 
@@ -23,5 +23,8 @@ namespace Stone
 		virtual void updateBuffer() override;
         
         bool m_NeedUpdateBuffer = true;
+
+		const aiScene* m_Scene;
+		const aiNode* m_Node;
 	};
 }

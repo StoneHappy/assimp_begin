@@ -8,8 +8,13 @@
 
 namespace Stone
 {
-	AssimpMesh::AssimpMesh(const aiMesh* mesh)
+	AssimpMesh::AssimpMesh(const aiMesh* mesh, const aiScene* scene, const aiNode* node, const std::string& filename)
+		: m_Scene(scene), m_Node(node)
 	{
+		m_Path = filename;
+		m_Directory = getDirectoryPath(filename);
+
+		LOG_DEBUG("director: {0}", m_Directory);
 		loadMesh(mesh);
 	}
 	void AssimpMesh::loadMesh(const aiMesh* mesh)

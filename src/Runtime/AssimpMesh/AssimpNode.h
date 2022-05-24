@@ -12,7 +12,7 @@ namespace Stone
 	public:
 		AssimpNode(const char* filename);
 
-		AssimpNode(AssimpNode* parentNode, const aiNode* node, const aiScene* scene);
+		AssimpNode(AssimpNode* parentNode, const aiNode* node, const aiScene* scene, const std::string& filename);
 
 		static void recusiveRender(AssimpNode* node);
 	public:
@@ -25,7 +25,9 @@ namespace Stone
 		glm::mat4 m_Transform;
 
 		const aiScene* m_Scene;
-		const aiScene* m_Node;
+		const aiNode* m_Node;
 		const AssimpNode* m_Parent;
+
+		std::string m_Filename;
 	};
 }

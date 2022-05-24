@@ -37,7 +37,7 @@ namespace Stone
         PublicSingleton<Engine>::getInstance().logicalInitialize();
         QtImGui::initialize(this);
 
-        meshnode = new AssimpNode("D:/datas/obj/cccc.obj");
+        meshnode = new AssimpNode("D:/datas/obj/car.obj");
         transform = new TransformComponent();
 	}
 
