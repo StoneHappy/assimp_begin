@@ -24,6 +24,10 @@ namespace Stone
 	{
 		for (auto mesh : node->m_ChildMeshes)
 		{
+			if (mesh->m_Texture != nullptr)
+			{
+				mesh->m_Texture->bind(0);
+			}
 			PublicSingletonInstance(Renderer).render(mesh.get());
 		}
 		for (auto child : node->m_ChildNodes)

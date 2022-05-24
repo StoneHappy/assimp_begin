@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Resource/Data/Implement/VCG/VCGMesh.h>
-
+#include <Resource/Data/Interface/Mesh.h>
+#include <Function/Render/Interface/Texture.h>
 #include <vector>
 #include <assimp/scene.h>
 
@@ -16,9 +16,11 @@ namespace Stone
 		AssimpMesh(const aiMesh* mesh, const aiScene* scene, const aiNode* node, const std::string& filename);
 
 		std::vector<std::shared_ptr<AssimpMesh>> m_Children;
-
+		std::shared_ptr<Texture2D> m_Texture = nullptr;
 	private:
 		void loadMesh(const aiMesh* mesh);
+
+		void leadTexture();
 
 		virtual void updateBuffer() override;
         
@@ -26,5 +28,7 @@ namespace Stone
 
 		const aiScene* m_Scene;
 		const aiNode* m_Node;
+		const aiMesh* m_Mesh;
+
 	};
 }

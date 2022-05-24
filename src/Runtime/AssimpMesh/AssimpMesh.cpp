@@ -9,13 +9,14 @@
 namespace Stone
 {
 	AssimpMesh::AssimpMesh(const aiMesh* mesh, const aiScene* scene, const aiNode* node, const std::string& filename)
-		: m_Scene(scene), m_Node(node)
+		: m_Scene(scene), m_Node(node), m_Mesh(mesh)
 	{
 		m_Path = filename;
 		m_Directory = getDirectoryPath(filename);
 
 		LOG_DEBUG("director: {0}", m_Directory);
 		loadMesh(mesh);
+		leadTexture();
 	}
 	void AssimpMesh::loadMesh(const aiMesh* mesh)
 	{
@@ -27,8 +28,8 @@ namespace Stone
 			v.px = mesh->mVertices[i].x;
 			v.py = mesh->mVertices[i].y;
 			v.pz = mesh->mVertices[i].z;
-			v.u = 0;
-			v.v = 0;
+			v.u = mesh->mTextureCoords[0]==nullptr ? 0 : mesh->mTextureCoords[0][i].x;
+			v.v = mesh->mTextureCoords[0]==nullptr ? 0 : mesh->mTextureCoords[0][i].y;
 			v.nx = mesh->mNormals[i].x;
 			v.ny = mesh->mNormals[i].y;
 			v.nz = mesh->mNormals[i].z;
@@ -49,6 +50,24 @@ namespace Stone
 			m_I.push_back(face->mIndices[2]);
 		}
 		updateBuffer();
+	}
+	void AssimpMesh::leadTexture()
+	{
+		const aiMaterial* mt = m_Scene->mMaterials[m_Mesh->mMaterialIndex];
+
+		LOG_DEBUG("texture count: {0}", mt->GetTextureCount(aiTextureType_DIFFUSE))
+
+		if (mt->GetTextureCount(aiTextureType_DIFFUSE) == 0) return;
+
+		aiString str;
+		mt->GetTexture(aiTextureType_DIFFUSE, 0, &str);
+
+
+		std::string filename = std::string(str.data);
+
+		filename = m_Directory + '/' + filename;
+		LOG_DEBUG("texture filename: {0}", filename);
+		m_Texture = Texture2D::create(filename);
 	}
 	void AssimpMesh::updateBuffer()
 	{
