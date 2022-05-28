@@ -10,7 +10,7 @@ namespace Stone
 	class AssimpNode
 	{
 	public:
-		AssimpNode(const char* filename);
+		AssimpNode(const std::string& filename);
 
 		AssimpNode(AssimpNode* parentNode, const aiNode* node, const aiScene* scene, const std::string& filename);
 

@@ -20,6 +20,7 @@
 
 #include <AssimpMesh/AssimpMesh.h>
 #include <AssimpMesh/AssimpNode.h>
+#include <AssimpMesh/ModelPool.h>
 namespace Stone
 {
     AssimpNode* meshnode;
@@ -36,8 +37,7 @@ namespace Stone
         PublicSingleton<Engine>::getInstance().renderInitialize();
         PublicSingleton<Engine>::getInstance().logicalInitialize();
         QtImGui::initialize(this);
-
-        meshnode = new AssimpNode("D:/datas/obj/house/cottage_obj.obj");
+        meshnode = PublicSingleton<ModelPool<AssimpNode>>::getInstance().get("D:/datas/obj/house/cottage_obj.obj").get();
         transform = new TransformComponent();
 	}
 

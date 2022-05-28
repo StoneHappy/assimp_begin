@@ -6,11 +6,11 @@
 
 namespace Stone
 {
-	AssimpNode::AssimpNode(const char* filename)
+	AssimpNode::AssimpNode(const std::string& filename)
 		: m_Filename(filename)
 	{
 		m_Parent = nullptr;
-		const aiScene* scene = aiImportFile(filename, aiProcessPreset_TargetRealtime_MaxQuality);
+		const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 		m_Scene = scene;
 		loadNode(scene, scene->mRootNode);
 	}
