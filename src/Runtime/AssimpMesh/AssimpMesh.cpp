@@ -67,7 +67,7 @@ namespace Stone
 
 		filename = m_Directory + '/' + filename;
 		LOG_DEBUG("texture filename: {0}", filename);
-		m_Texture = Texture2D::create(filename);
+		m_Texture = PublicSingleton<TexturePool>::getInstance().getTexture(filename);
 	}
 	void AssimpMesh::updateBuffer()
 	{
